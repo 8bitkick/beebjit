@@ -216,6 +216,13 @@ jit_optimizer_replace_uops(struct jit_opcode_details* p_opcodes) {
     }
 
     switch (p_opcode->optype_6502) {
+    case k_sed:
+    case k_plp:
+      /* D may be set from here on, so a later ADC / SBC needs its own
+       * check.
+       */
+      had_check_bcd = 0;
+      break;
     case k_adc:
       if ((p_opcode->flag_decimal == 0) || had_check_bcd) {
         do_eliminate_check_bcd = 1;
